@@ -11,10 +11,14 @@ public class CalculatorApp {
             char operator;
             do{
                 System.out.println("please enter an operator (+, -, *, /, ^) to continue:");
-                operator = (char)input.nextByte();
+                operator = (char)input.next().charAt(0);
                 if((operator != '+') && (operator != '-') && (operator != '*') && (operator != '/') && (operator != '^'))
                 {
                     invalidInput = true;
+                }
+                else
+                {
+                    invalidInput = false;
                 }
             } while (invalidInput == true); 
 
@@ -22,7 +26,7 @@ public class CalculatorApp {
             Double inputNumber2 = 0.0;
             if((operator == '^'))
             {
-                System.out.println("Please input the a number:");
+                System.out.println("Please input the number to be squred:");
                 inputNumber1 = input.nextDouble();
             }
             else
@@ -36,34 +40,40 @@ public class CalculatorApp {
             switch (operator) {
                 case '+':
                 Double sum = addition(inputNumber1, inputNumber2);
-                System.out.printf("The sum of %ld and %ld is %ld.", inputNumber1, inputNumber2, sum);
+                System.out.printf("The sum of %.2f and %.2f is %.2f.", inputNumber1, inputNumber2, sum);
                 break;
 
                 case '-':
                 Double diff = subtraction(inputNumber1, inputNumber2);
-                System.out.printf("The difference of %ld and %ld is %ld.", inputNumber1, inputNumber2, diff);
+                System.out.printf("The difference of %.2f and %.2f is %.2f.", inputNumber1, inputNumber2, diff);
                 break;
 
                 case '*':
                 Double prod = multiplication(inputNumber1, inputNumber2);
-                System.out.printf("The product of %ld and %ld is %ld.", inputNumber1, inputNumber2, prod);
+                System.out.printf("The product of %.2f and %.2f is %.2f.", inputNumber1, inputNumber2, prod);
                 break;
 
                 case '/':
                 Double quot = division(inputNumber1, inputNumber2);
-                System.out.printf("The quotient of %ld and %ld is %ld.", inputNumber1, inputNumber2, quot);
+                System.out.printf("The quotient of %.2f divided by %.2f is %.2f.", inputNumber1, inputNumber2, quot);
                 break;
 
                 default:
                 Double sqr = findSquare(inputNumber1);
-                System.out.printf("The squre of %ld is %ld.", inputNumber1, inputNumber2, sqr);
+                System.out.printf("The squre of %.2f is %.2f.", inputNumber1, sqr);
                 break;
             }
             
-            System.out.println("Do you want to continue next calculation? (Y/N)");
+            input.nextLine();// Read the line return from previous input
+            System.out.println("\nDo you want to continue next calculation? (Y/N)");
             String response = input.nextLine();
             if(response.equalsIgnoreCase("Y"))
             {
+                done = false;
+            }
+            else
+            {
+                System.out.println("Thanks for using the Calculator!");
                 done = true;
             }
             
