@@ -1,6 +1,6 @@
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Scanner;
-
-import javax.lang.model.util.ElementScanner6;
 
 import MagicCalculator.MagicCalculator;
 
@@ -120,7 +120,7 @@ public class CalculatorApp {
                     break;
 
                 case 's':
-                    Double sinVal = findSin(inputNumber1);
+                    Double sinVal = findSine(inputNumber1);
                     System.out.printf("The sin of %.2f is %.2f.", inputNumber1, sinVal);
                     break;
 
@@ -130,25 +130,21 @@ public class CalculatorApp {
                     break;
 
                 case 't':
-                    Double tanVal = findTan(inputNumber1);
-                    System.out.printf("The tangent of %.2f angle is %.2f.", inputNumber1, tanVal);
+                    //Check to see if the tangent value of the operand entered is undefined
+                    Double cos = findCosine(inputNumber1);                  
+                    BigDecimal bigCos = new BigDecimal(cos).setScale(1,RoundingMode.HALF_DOWN);
+                    BigDecimal bigZero = new BigDecimal("0.0").setScale(1,RoundingMode.HALF_DOWN);
+                    if(bigCos.compareTo(bigZero) == 0)
+                    {
+                        System.out.printf("The tangent of %.2f angle is undefined.", inputNumber1);
+                    }
+                    else{
+                        Double tanVal = findTan(inputNumber1);
+                        System.out.printf("The tangent of %.2f angle is %.2f.", inputNumber1, tanVal);
+                    }
                     break;
 
                 case 'r':
-                   /*  if (inputNumber1 >= 0.0) {
-                        Double sqrtVal = findSqrt(inputNumber1);
-                        System.out.printf("The square root of %.2f is %.2f.", inputNumber1, sqrtVal);
-                    } else {
-                        System.out.println("The operand cannot be a negative number!");
-                        while (inputNumber1 < 0.0) {
-                            while (!input.hasNextDouble()) {
-                                System.out.println("Please enter a non-negative number to continue:");
-                                input.next();
-                            }
-                            inputNumber1 = input.nextDouble();
-                        }
-                    } */
-
                     Boolean  invalidOperand = false;
                     if (inputNumber1 < 0.0) {
                         System.out.println("The operand cannot be a negative number!");
@@ -191,7 +187,7 @@ public class CalculatorApp {
             if (response.equalsIgnoreCase("Y")) {
                 done = false;
             } else {
-                System.out.println("Done. Thanks for using the Calculator!");
+                System.out.println("Done with calculation. Thanks for using the Calculator!");
                 done = true;
             }
 
@@ -201,51 +197,61 @@ public class CalculatorApp {
 
     }
 
+    //This function returns the sum of the two input values
     public static Double addition(Double operand1, Double Operand2) {
         MagicCalculator myCalculator = new MagicCalculator(operand1, Operand2);
         return myCalculator.add();
     }
 
+    //This function returns the difference of the two input values
     public static Double subtraction(Double operand1, Double Operand2) {
         MagicCalculator myCalculator = new MagicCalculator(operand1, Operand2);
         return myCalculator.subtract();
     }
 
+    //This function returns the product of the two input values
     public static Double multiplication(Double operand1, Double Operand2) {
         MagicCalculator myCalculator = new MagicCalculator(operand1, Operand2);
         return myCalculator.multiply();
     }
 
+    //This function returns the quotient of the operand1 divided by Operand2
     public static Double division(Double operand1, Double Operand2) {
         MagicCalculator myCalculator = new MagicCalculator(operand1, Operand2);
         return myCalculator.divide();
     }
 
+    //This function returns the squre of the operand
     public static Double findSquare(Double operand) {
         MagicCalculator myCalculator = new MagicCalculator(operand);
         return myCalculator.square();
     }
 
+    //This function returns the squre of the squre root of the operand
     public static Double findSqrt(Double operand) {
         MagicCalculator myCalculator = new MagicCalculator(operand);
         return myCalculator.squreRoot();
     }
 
-    public static Double findSin(Double operand) {
+    //This function returns the sine value the operand
+    public static Double findSine(Double operand) {
         MagicCalculator myCalculator = new MagicCalculator(operand);
         return myCalculator.sin();
     }
 
+    //This function returns the cosine value the operand
     public static Double findCosine(Double operand) {
         MagicCalculator myCalculator = new MagicCalculator(operand);
         return myCalculator.cos();
     }
 
+     //This function returns the tangent value the operand
     public static Double findTan(Double operand) {
         MagicCalculator myCalculator = new MagicCalculator(operand);
         return myCalculator.tan();
     }
 
+    //This function returns the factorial of the operand
     public static int factorial(int n) {
         if (n == 0)
             return 1;
@@ -282,21 +288,6 @@ public class CalculatorApp {
                 return retVal;
             }
         }
-
         return retVal;
     }
-
-    /*
-     * public static Boolean isValidDouble(Scanner sc)
-     * {
-     * System.out.println("Enter a double number:");
-     * while (!sc.hasNextDouble())
-     * {
-     * System.out.println("Invalid input\n enter a double number:");
-     * sc.next();
-     * }
-     * double userInput = sc.nextDouble(); // need to check the data type?
-     * System.out.println("Here it is: " + userInput);
-     * }
-     */
 }
