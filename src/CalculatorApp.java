@@ -1,18 +1,22 @@
 import java.util.Scanner;
+
+import javax.lang.model.util.ElementScanner6;
+
 import MagicCalculator.MagicCalculator;
 
 public class CalculatorApp {
     public static void main(String[] args) throws Exception {
-       
+
         System.out.println("Welcome to use the Magic Calculator!");
-        Scanner input = new Scanner (System.in);
+        Scanner input = new Scanner(System.in);
         Boolean done = false;
         do {
             Boolean validInput = false;
             char operator;
 
-            //Get the user's input for the operation to perform and validate the input operator
-            do{
+            // Get the user's input for the operation to perform and validate the input
+            // operator
+            do {
                 System.out.println("please enter a valid operator from the following list:");
                 System.out.println("+ for addition");
                 System.out.println("- for subtraction");
@@ -24,48 +28,45 @@ public class CalculatorApp {
                 System.out.println("t for tangent");
                 System.out.println("r for squre root");
                 System.out.println("! for factorial");
-                
-                operator = (char)input.next().charAt(0);
 
-                //validate the user's input to make sure the input is valid
+                operator = (char) input.next().charAt(0);
+
+                // validate the user's input to make sure the input is valid
 
                 validInput = isValidOperator(operator);
-               
-            } while (validInput == false); 
+
+            } while (validInput == false);
 
             Double inputNumber1 = 0.0;
             Double inputNumber2 = 0.0;
-            if(isUnaryOperator(operator))
-            {
-                //Get the operand and validate the input
+            if (isUnaryOperator(operator)) {
+                // Get the operand and validate the input
                 System.out.println("Please enter the operand (a number) for the selected operator:");
-                /* while (!input.hasNextDouble()){
-{                   System.out.println("Please enter the operand (a number) for the selected operator:");
+                while (!input.hasNextDouble()) {
+                    System.out.println("Please enter a valid operand (a number) for the selected operator:");
                     input.next();
-}               } */
+                }
                 inputNumber1 = input.nextDouble();
-            }
-            else
-            {
-                //Get the first operand and validate the input
+            } else {
+                // Get the first operand and validate the input
                 System.out.println("Please enter the first operand (a number) for the selected operator:");
-               /*  while (!input.hasNextDouble()){
-                    System.out.println("Please enter the first operand (a number) for the selected operator:");
-                    input.next();                              
-                }     */            
+                while (!input.hasNextDouble()) {
+                    System.out.println("Please enter a valid first operand (a number) for the selected operator:");
+                    input.next();
+                }
 
                 inputNumber1 = input.nextDouble();
 
-                //Get the second operand and validate the input
+                // Get the second operand and validate the input
                 System.out.println("Please enter the second operand (a number) for the selected operator:");
-               /*  while (!input.hasNextDouble()){
-                    System.out.println("Please enter the second operand (a number) for the selected operator:");
-                    input.next();                              
-                }   */               
+                while (!input.hasNextDouble()) {
+                    System.out.println("Please enter an valid second operand (a number) for the selected operator:");
+                    input.next();
+                }
                 inputNumber2 = input.nextDouble();
             }
 
-            //Perform the operation accordingly
+            // Perform the operation accordingly
             switch (operator) {
                 case '+':
                     Double sum = addition(inputNumber1, inputNumber2);
@@ -83,8 +84,34 @@ public class CalculatorApp {
                     break;
 
                 case '/':
+                    // Make sure the divider is not 0
+                    Boolean invalidDivider = false;
+                    if (inputNumber2 == 0.0) {
+                        System.out.println("The divider cannot be zero!");
+                        invalidDivider = true;
+                    }
+
+                    // Prompt for the non-zero divider
+                    while (invalidDivider == true) {
+                        try {
+                            System.out.println("Please enter a non-zero number for the divider:");
+
+                            while (!input.hasNextDouble()) {
+                                System.out.println("Please enter a non-zero number for the divider:");
+                                input.next();
+                            }
+                            inputNumber2 = input.nextDouble();
+                            if (inputNumber2 != 0.0) {
+                                invalidDivider = false;
+                            }
+                        } catch (Exception e) {
+                            invalidDivider = true;
+                        }
+                    }
+
                     Double quot = division(inputNumber1, inputNumber2);
-                    System.out.printf("The quotient of %.2f divided by %.2f is %.2f.", inputNumber1, inputNumber2, quot);
+                    System.out.printf("The quotient of %.2f divided by %.2f is %.2f.", inputNumber1, inputNumber2,
+                            quot);
                     break;
 
                 case '^':
@@ -108,6 +135,45 @@ public class CalculatorApp {
                     break;
 
                 case 'r':
+                   /*  if (inputNumber1 >= 0.0) {
+                        Double sqrtVal = findSqrt(inputNumber1);
+                        System.out.printf("The square root of %.2f is %.2f.", inputNumber1, sqrtVal);
+                    } else {
+                        System.out.println("The operand cannot be a negative number!");
+                        while (inputNumber1 < 0.0) {
+                            while (!input.hasNextDouble()) {
+                                System.out.println("Please enter a non-negative number to continue:");
+                                input.next();
+                            }
+                            inputNumber1 = input.nextDouble();
+                        }
+                    } */
+
+                    Boolean  invalidOperand = false;
+                    if (inputNumber1 < 0.0) {
+                        System.out.println("The operand cannot be a negative number!");
+                        invalidOperand = true;
+                    }
+
+                    //Prompt for non-negative number
+                    while (invalidOperand == true)
+                    {
+                        try{
+                            System.out.println("Please enter a non-negative number to continue:");
+                            while (!input.hasNextDouble()){
+                                System.out.println("Please enter a non-negative number to continue:");
+                                input.next();                              
+                            }              
+                            inputNumber1 = input.nextDouble(); 
+                            if( inputNumber1 >= 0.0) {
+                                invalidOperand = false;
+                            } 
+                        }
+                        catch(Exception e)
+                        {
+                            invalidOperand = true;
+                        }
+                    }
                     Double sqrtVal = findSqrt(inputNumber1);
                     System.out.printf("The square root of %.2f is %.2f.", inputNumber1, sqrtVal);
                     break;
@@ -118,123 +184,119 @@ public class CalculatorApp {
                     System.out.printf("The factotial of %d is %d.", number, facVal);
                     break;
             }
-            
+
             input.nextLine();// Read the line return from previous input
             System.out.println("\nDo you want to continue next calculation? (Y/N)");
             String response = input.nextLine();
-            if(response.equalsIgnoreCase("Y"))
-            {
+            if (response.equalsIgnoreCase("Y")) {
                 done = false;
-            }
-            else
-            {
+            } else {
                 System.out.println("Done. Thanks for using the Calculator!");
                 done = true;
             }
-            
-        }while (done == false);
+
+        } while (done == false);
 
         input.close();
 
     }
 
-    public static Double addition (Double operand1, Double Operand2)
-    {
-        MagicCalculator myCalculator = new MagicCalculator(operand1,  Operand2);
+    public static Double addition(Double operand1, Double Operand2) {
+        MagicCalculator myCalculator = new MagicCalculator(operand1, Operand2);
         return myCalculator.add();
     }
 
-    public static Double subtraction (Double operand1, Double Operand2)
-    {
-        MagicCalculator myCalculator = new MagicCalculator(operand1,  Operand2);
+    public static Double subtraction(Double operand1, Double Operand2) {
+        MagicCalculator myCalculator = new MagicCalculator(operand1, Operand2);
         return myCalculator.subtract();
     }
 
-    public static Double multiplication (Double operand1, Double Operand2)
-    {
-        MagicCalculator myCalculator = new MagicCalculator(operand1,  Operand2);
+    public static Double multiplication(Double operand1, Double Operand2) {
+        MagicCalculator myCalculator = new MagicCalculator(operand1, Operand2);
         return myCalculator.multiply();
     }
 
-    public static Double division (Double operand1, Double Operand2)
-    {
-        MagicCalculator myCalculator = new MagicCalculator(operand1,  Operand2);
+    public static Double division(Double operand1, Double Operand2) {
+        MagicCalculator myCalculator = new MagicCalculator(operand1, Operand2);
         return myCalculator.divide();
     }
 
-    public static Double findSquare (Double operand)
-    {
+    public static Double findSquare(Double operand) {
         MagicCalculator myCalculator = new MagicCalculator(operand);
         return myCalculator.square();
     }
 
-    public static Double findSqrt (Double operand)
-    {
+    public static Double findSqrt(Double operand) {
         MagicCalculator myCalculator = new MagicCalculator(operand);
         return myCalculator.squreRoot();
     }
 
-    public static Double findSin(Double operand)
-    {
+    public static Double findSin(Double operand) {
         MagicCalculator myCalculator = new MagicCalculator(operand);
         return myCalculator.sin();
     }
 
-    public static Double findCosine(Double operand)
-    {
+    public static Double findCosine(Double operand) {
         MagicCalculator myCalculator = new MagicCalculator(operand);
         return myCalculator.cos();
     }
 
-    public static Double findTan(Double operand)
-    {
+    public static Double findTan(Double operand) {
         MagicCalculator myCalculator = new MagicCalculator(operand);
         return myCalculator.tan();
     }
 
-    public static int factorial(int n)
-    {
+    public static int factorial(int n) {
         if (n == 0)
             return 1;
-        else
-            return n*factorial(n-1);
-    }  
-    
+        else if (n > 0)
+            return n * factorial(n - 1);
+        else {
+            return n * factorial(n + 1);
+        }
+    }
 
-    //This function will check whether the input operator is a valid operator
-    private static Boolean isValidOperator(char op)
-    {
+    // This function will check whether the input operator is a valid operator
+    private static Boolean isValidOperator(char op) {
         Boolean retVal = false;
-        char[] operatorArray = {'+', '-', '*', '/', '^', 's', 'c', 't', 'r', '!'};
+        char[] operatorArray = { '+', '-', '*', '/', '^', 's', 'c', 't', 'r', '!' };
 
-        for(int i = 0; i< operatorArray.length; i++)
-        {
-            if(operatorArray[i] == op)
-            {
+        for (int i = 0; i < operatorArray.length; i++) {
+            if (operatorArray[i] == op) {
                 retVal = true;
                 return retVal;
             }
         }
 
-        return retVal;        
+        return retVal;
     }
 
-    //Check to see if the operator is an Unary operator
-    private static Boolean isUnaryOperator(char op)
-    {
+    // Check to see if the operator is an Unary operator
+    private static Boolean isUnaryOperator(char op) {
         Boolean retVal = false;
-        char[] operatorArray = {'^', 's', 'c', 't', 'r', '!'};
+        char[] operatorArray = { '^', 's', 'c', 't', 'r', '!' };
 
-        for(int i = 0; i< operatorArray.length; i++)
-        {
-            if(operatorArray[i] == op)
-            {
+        for (int i = 0; i < operatorArray.length; i++) {
+            if (operatorArray[i] == op) {
                 retVal = true;
                 return retVal;
             }
         }
 
-        return retVal;        
+        return retVal;
     }
 
+    /*
+     * public static Boolean isValidDouble(Scanner sc)
+     * {
+     * System.out.println("Enter a double number:");
+     * while (!sc.hasNextDouble())
+     * {
+     * System.out.println("Invalid input\n enter a double number:");
+     * sc.next();
+     * }
+     * double userInput = sc.nextDouble(); // need to check the data type?
+     * System.out.println("Here it is: " + userInput);
+     * }
+     */
 }
